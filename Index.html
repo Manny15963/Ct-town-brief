@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CT Town Brief | 3-Minute Zoning Summaries</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:#f8f9fa;color:#212529}
+    header{background:#004c92;color:#fff;padding:2rem;text-align:center}
+    .btn{background:#004c92;color:#fff;padding:.75rem 1.5rem;border:none;border-radius:4px;cursor:pointer;font-size:1rem}
+    .btn:hover{background:#003162}
+    #price{font-size:1.2rem;font-weight:600;margin:1rem 0}
+    section{max-width:680px;margin:auto;padding:2rem 1rem}
+    footer{text-align:center;padding:2rem;font-size:.9rem;color:#6c757d}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CT Town Brief</h1>
+    <p>3-minute zoning summaries every Tuesday</p>
+  </header>
+  <section>
+    <h2>What you get</h2>
+    <ul>
+      <li>Bullet-proof summary of every Hartford, New Haven, Stamford P&Z vote</li>
+      <li>Plain-English “what it means for values”</li>
+      <li>Delivered by e-mail at 7 a.m. (Tuesdays)</li>
+    </ul>
+    <div id="price">$9 / month · cancel anytime</div>
+    <button id="checkout-button" class="btn">Start free 7-day trial</button>
+  </section>
+  <footer>© 2024 CT Town Brief · <a href="mailto:hello@cttownbrief.com">hello@cttownbrief.com</a></footer>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    const stripe = Stripe('pk_test_REPLACE_WITH_YOUR_KEY');
+    const btn = document.getElementById('checkout-button');
+    btn.addEventListener('click', () => {
+      fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+                   'Authorization': 'Bearer sk_test_REPLACE_WITH_YOUR_KEY' },
+        body: 'payment_method_types[]=card&mode=subscription&line_items[0][price_data][unit_amount]=900&line_items[0][price_data][currency]=usd&line_items[0][price_data][product_data][name]=CT Town Brief&line_items[0][quantity]=1&success_url=https://YOUR-USERNAME.github.io/success.html&cancel_url=https://YOUR-USERNAME.github.io/'
+      }).then(r => r.json())
+        .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
+        .catch(error => alert(error.message));
+    });
+  </script>
+</body>
+</html>
