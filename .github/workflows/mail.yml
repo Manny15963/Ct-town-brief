@@ -1,0 +1,17 @@
+name: send-newsletter
+on:
+  schedule:
+    - cron: '0 11 * * 1'   # Monday 6 a.m. ET
+  workflow_dispatch:
+jobs:
+  mail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with: { python-version: '3.11' }
+      - run: pip install requests mailgun-py
+      - run: python send.py
+        env:
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+          MAILGUN_KEY: ${{ secrets.MAILGUN_KEY }}
